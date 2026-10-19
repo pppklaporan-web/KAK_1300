@@ -5,7 +5,7 @@ import io
 st.set_page_config(page_title="Generator KAK BPS", layout="centered")
 
 st.title("📄 Form Generator Kerangka Acuan Kerja (KAK)")
-st.write("Pengisian dokumen KAK secara otomatis.")
+st.write("Formulir dokumen KAK Otomatis.")
 
 # Form Input dari Pengguna
 with st.form("form_kak"):
@@ -48,8 +48,13 @@ with st.form("form_kak"):
 
     spesifikasi_teknis = st.text_area("Spesifikasi Teknis", "1. Tabung Filter 10 Inci\n2. Media Carbon Active & Manganese")
     
-    ppl = st.text_input("Nama Pejabat/Pihak Terkait (PPL)", "Nama Pejabat Pembuat Komitmen")
-    kabag = st.text_input("Nama Kepala Bagian Umum", "Nama Kabag Umum, S.E., M.Si.")
+    st.subheader("4. Penandatangan / Pejabat")
+    col7, col8 = st.columns(2)
+    with col7:
+        ppl = st.text_input("Nama Pejabat Pembuat Komitmen (Di Bawah)", "Nama Pejabat Pembuat Komitmen")
+        jabatan_kanan = st.text_input("Jabatan Penandatangan Kanan", "Kepala Bagian Umum atau Ketua TIM,")
+    with col8:
+        kabag = st.text_input("Nama Pejabat/Kabag/Ketua Tim (Kanan)", "Nama Kabag Umum, S.E., M.Si.")
 
     # Tombol Submit
     submit_button = st.form_submit_button(label="🚀 Generate Dokumen KAK")
@@ -59,7 +64,7 @@ if submit_button:
         # Load template Word
         doc = DocxTemplate("KAK Filterisasi Air Sumur.docx")
         
-        # Mapping data form ke tag placeholder baru di Word (tanpa spasi / karakter khusus)
+        # Mapping data form ke tag placeholder di Word
         context = {
             "JUDUL": judul,
             "Kementerian_Lembaga": kementerian,
@@ -84,6 +89,7 @@ if submit_button:
             "Spesifikasi_Teknis": spesifikasi_teknis,
             "TGL_BULAN_TAHUN": tgl_surat,
             "PPL": ppl,
+            "Jabatan_Kanan": jabatan_kanan,
             "KABAG": kabag
         }
         
@@ -97,7 +103,7 @@ if submit_button:
         
         st.success("🎉 Dokumen KAK berhasil dibuat!")
         
-        # Tombol Download untuk pengguna
+        # Tombol Download
         st.download_button(
             label="📥 Download File Word (.docx)",
             data=file_stream,
@@ -107,3 +113,6 @@ if submit_button:
         
     except Exception as e:
         st.error(f"Terjadi kesalahan: {e}")
+
+    st.divider()
+st.markdown("<p style='text-align: center; color: gray;'>BPS 2026 - BPS SUMATERA BARAT</p>", unsafe_allow_html=True)
